@@ -59,6 +59,8 @@ proguard/
 **/*.iml
 *.iml
 app/*.iml
+sample/*.iml
+sample/sample.iml
 
 .DS_Store
 /build

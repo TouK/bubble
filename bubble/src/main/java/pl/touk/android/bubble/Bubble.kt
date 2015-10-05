@@ -1,4 +1,4 @@
-package pl.touk.jointly.orientation
+package pl.touk.android.bubble
 
 import android.content.Context
 import android.hardware.Sensor

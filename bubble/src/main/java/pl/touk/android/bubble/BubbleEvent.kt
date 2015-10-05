@@ -1,4 +1,4 @@
-package pl.touk.jointly.orientation
+package pl.touk.android.bubble
 
 
 public class BubbleEvent(val orientation: Orientation)

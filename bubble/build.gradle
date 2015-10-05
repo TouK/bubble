@@ -6,7 +6,6 @@ buildscript {
     }
 
     dependencies {
-        classpath 'me.tatarka:gradle-retrolambda:2.4.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
@@ -14,6 +13,7 @@ buildscript {
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'com.neenbedankt.android-apt'
+apply plugin: 'maven'
 
 android {
     compileSdkVersion 23
@@ -97,6 +97,12 @@ dependencies {
     compile 'org.lucasr.twowayview:twowayview:0.1.4'
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 }
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+apply from: rootProject.file('gradle/mvn-publish.gradle')
 
 apply plugin: 'idea'
 

@@ -1,1 +1,3 @@
-include ':sample', ':bubble'
+rootProject.name = 'bubble-root'
+
+include ':bubble', ':sample'

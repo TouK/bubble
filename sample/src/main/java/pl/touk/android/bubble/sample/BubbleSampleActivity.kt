@@ -1,10 +1,11 @@
 package pl.touk.android.bubble.sample
 
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v7.app.AppCompatActivity
 import android.widget.TextView
-import pl.touk.jointly.orientation.Bubble
-import pl.touk.jointly.orientation.BubbleEvent
+import pl.touk.android.bubble.Bubble
+import pl.touk.android.bubble.BubbleEvent
+import pl.touk.android.bubble.sample.R
 
 class BubbleSampleActivity : AppCompatActivity() {
 

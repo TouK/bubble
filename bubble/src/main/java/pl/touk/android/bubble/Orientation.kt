@@ -1,7 +1,6 @@
+package pl.touk.android.bubble
 
-package pl.touk.jointly.orientation
-
-import pl.touk.jointly.utils.almostEqual
+import pl.touk.android.bubble.utils.almostEqual
 
 
 public enum class Orientation(val rotation: Float) {

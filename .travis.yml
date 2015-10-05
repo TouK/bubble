@@ -6,9 +6,11 @@ android:
     - android-23
 
 jdk: oraclejdk7
+-Xms2048M
+-Xmx2048M
 env:
   matrix:
-    - ANDROID_TARGET=android-23  ANDROID_ABI=armeabi-v7a MAVEN_OPTS="-XX:MaxPermSize=1024m -Xmx4g"
+    - ANDROID_TARGET=android-23  ANDROID_ABI=armeabi-v7a MAVEN_OPTS="-XX:MaxPermSize=2048M -Xmx4g -Xms2g"
 
 script: ./gradlew clean build --stacktrace --info
 

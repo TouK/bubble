@@ -5,10 +5,10 @@ android:
     - extra-android-m2repository
     - android-23
 
-jdk: oraclejdk8
+jdk: oraclejdk7
 env:
   matrix:
-    - ANDROID_TARGET=android-22  ANDROID_ABI=armeabi-v7a MAVEN_OPTS="-XX:MaxPermSize=1024m -Xmx4g"
+    - ANDROID_TARGET=android-23  ANDROID_ABI=armeabi-v7a MAVEN_OPTS="-XX:MaxPermSize=1024m -Xmx4g"
 
-script: ./gradlew clean build --stacktrace
+script: ./gradlew clean build --stacktrace -- info
 

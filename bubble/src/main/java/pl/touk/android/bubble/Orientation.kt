@@ -1,8 +1,6 @@
 package pl.touk.android.bubble
 
-import android.util.Log
 import pl.touk.android.bubble.utils.almostEqual
-
 
 public enum class Orientation(val rotation: Float) {
 
@@ -15,7 +13,6 @@ public enum class Orientation(val rotation: Float) {
         private val TOLERANCE = 0.4f
 
         fun extract(xAxisValue: Float, yAxisValue: Float): Orientation {
-            Log.i("Orientation", "x[$xAxisValue]\ty[$yAxisValue]")
             if (xAxisValue.almostEqual(X_LANDSCAPE, TOLERANCE)
                     && yAxisValue.almostEqual(Y_LANDSCAPE, TOLERANCE)) {
                 return LANDSCAPE

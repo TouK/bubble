@@ -1,5 +1,4 @@
 buildscript {
-    ext.kotlin_version = '0.13.1513'
     repositories {
         mavenCentral()
         jcenter()
@@ -56,21 +55,20 @@ android {
         exclude 'META-INF/LICENSE.txt'
         exclude 'META-INF/NOTICE.txt'
     }
-
 }
 
 dependencies {
+//    repositories {
+//        mavenCentral()
+//    }
+
+    compile 'com.netflix.rxjava:rxjava-android:0.20.7'
+    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    provided 'javax.annotation:jsr250-api:1.0'
+
     testCompile('junit:junit:4.11') {
         exclude module: 'hamcrest-core'
     }
-
-    repositories {
-        mavenCentral()
-    }
-
-    provided 'javax.annotation:jsr250-api:1.0'
-    compile 'com.android.support:cardview-v7:23.0.+'
-    compile 'com.android.support:recyclerview-v7:23.0.+'
     testCompile 'org.hamcrest:hamcrest-integration:1.1'
     testCompile 'org.hamcrest:hamcrest-core:1.1'
     testCompile 'org.hamcrest:hamcrest-library:1.1'
@@ -93,11 +91,6 @@ dependencies {
         exclude module: 'wagon-http-lightweight'
         exclude module: 'wagon-provider-api'
     }
-    compile 'com.android.support:appcompat-v7:23.0.0'
-    compile 'com.netflix.rxjava:rxjava-android:0.20.7'
-    compile 'com.android.support:support-v4:23.0.0'
-    compile 'org.lucasr.twowayview:twowayview:0.1.4'
-    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 }
 
 tasks.withType(JavaCompile) {

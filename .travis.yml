@@ -8,8 +8,7 @@ android:
 jdk: oraclejdk7
 env:
   matrix:
-    - ANDROID_TARGET=android-22  ANDROID_ABI=armeabi-v7a
-    - MAVEN_OPTS="-XX:MaxPermSize=512m -Xmx4g"
+    - ANDROID_TARGET=android-22  ANDROID_ABI=armeabi-v7a MAVEN_OPTS="-XX:MaxPermSize=512m -Xmx4g"
 
 script: ./gradlew clean build
 

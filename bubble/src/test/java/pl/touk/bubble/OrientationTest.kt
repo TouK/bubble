@@ -3,6 +3,7 @@ package pl.touk.bubble
 import org.junit.Test
 import org.assertj.core.api.Assertions.assertThat
 import pl.touk.android.bubble.Orientation
+import rx.Observable
 
 class OrientationTest {
 
@@ -26,5 +27,16 @@ class OrientationTest {
 
         assertThat(Orientation.extract(xFullPortraitValue, yFullPortraitValue))
                 .isEqualTo(Orientation.PORTRAIT)
+    }
+
+
+    @Test
+    public fun sad() {
+        Observable.from(listOf(1, 2, 3, 4, 5))
+                .buffer(2)
+                .map { it.average() }
+                .subscribe {
+                    System.out.println(it)
+                }
     }
 }

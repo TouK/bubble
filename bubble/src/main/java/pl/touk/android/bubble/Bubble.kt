@@ -11,8 +11,8 @@ import rx.subjects.PublishSubject
 public class Bubble: SensorEventListener {
 
     companion object {
-        private val X_AXIS_POSITION = 1
-        private val Y_AXIS_POSITION = 2
+        private val PITCH_POSITION = 1
+        private val ROLL_POSITION = 2
     }
 
     lateinit var accelerometerSensor: Sensor
@@ -20,11 +20,13 @@ public class Bubble: SensorEventListener {
     lateinit var sensorManager: SensorManager
 
     var orientationPublisher: PublishSubject<BubbleEvent>? = null
+    private var coordinatesPublisher: PublishSubject<Coordinates>? = null
+
+    private val orientationCalculator = OrientationCalculator()
 
     private val magneticSensorValues: FloatArray = FloatArray(3)
     private val accelerometerSensorValues: FloatArray = FloatArray(3)
     private val rotationMatrix: FloatArray = FloatArray(9)
-
     private val orientationCoordinates: FloatArray = FloatArray(3)
 
     var lastOrientation = Orientation.PORTRAIT
@@ -35,7 +37,27 @@ public class Bubble: SensorEventListener {
         sensorManager.registerListener(this, accelerometerSensor, SensorManager.SENSOR_DELAY_UI)
         sensorManager.registerListener(this, magneticSensor, SensorManager.SENSOR_DELAY_UI)
         orientationPublisher = PublishSubject.create()
+        coordinatesPublisher = PublishSubject.create()
+        coordinatesPublisher!!
+                .buffer(40)
+                .map { coordinates: List<Coordinates> -> averageCoordinates(coordinates) }
+                .subscribe { coordinates: Coordinates ->
+                    orientationPublisher!!.onNext(BubbleEvent(orientationCalculator.calculate(coordinates)))
+                }
         return orientationPublisher!!
+    }
+
+    private fun averageCoordinates(coordinates: List<Coordinates>): Coordinates {
+        var averagePitch = 0f
+        var averageRoll = 0f
+        val size = coordinates.size().toFloat()
+
+        coordinates.forEach {
+            averagePitch += it.pitch
+            averageRoll += it.roll
+        }
+
+        return Coordinates(averagePitch/size, averageRoll/size)
     }
 
     private fun loadSensosrs(context: Context) {
@@ -47,6 +69,7 @@ public class Bubble: SensorEventListener {
     public fun unregister() {
         sensorManager.unregisterListener(this)
         ifRegistered(orientationPublisher) {
+            coordinatesPublisher!!.onCompleted()
             orientationPublisher!!.onCompleted()
         }
     }
@@ -56,14 +79,7 @@ public class Bubble: SensorEventListener {
 
     override fun onSensorChanged(sensorEvent: SensorEvent) {
         cacheEventData(sensorEvent)
-
-        val currentOrientation = calculateOrientation()
-        if (lastOrientation != currentOrientation) {
-            lastOrientation = currentOrientation
-            ifRegistered(orientationPublisher) {
-                orientationPublisher!!.onNext(BubbleEvent(lastOrientation))
-            }
-        }
+        coordinatesPublisher!!.onNext(calculateOrientationCoordinates())
     }
 
     private fun cacheEventData(sensorEvent: SensorEvent) {
@@ -74,13 +90,17 @@ public class Bubble: SensorEventListener {
         }
     }
 
-    private fun calculateOrientation(): Orientation {
+    private fun calculateOrientationCoordinates(): Coordinates {
         SensorManager.getRotationMatrix(rotationMatrix, null, accelerometerSensorValues, magneticSensorValues);
         SensorManager.getOrientation(rotationMatrix, orientationCoordinates);
 
-        return Orientation.extract(orientationCoordinates[X_AXIS_POSITION],
-                                    orientationCoordinates[Y_AXIS_POSITION])
+        val pitch = orientationCoordinates[PITCH_POSITION]
+        val roll = orientationCoordinates[ROLL_POSITION]
+
+        return Coordinates(pitch, roll)
+
     }
+
 }
 
 inline fun<T> ifRegistered(subject: PublishSubject<T>?, action: () -> Unit) {

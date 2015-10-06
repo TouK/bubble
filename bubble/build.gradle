@@ -1,6 +1,5 @@
 buildscript {
     repositories {
-        mavenCentral()
         jcenter()
     }
 
@@ -58,10 +57,6 @@ android {
 }
 
 dependencies {
-//    repositories {
-//        mavenCentral()
-//    }
-
     compile 'com.netflix.rxjava:rxjava-android:0.20.7'
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     provided 'javax.annotation:jsr250-api:1.0'

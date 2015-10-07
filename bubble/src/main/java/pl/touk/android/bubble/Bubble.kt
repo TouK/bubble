@@ -13,6 +13,7 @@ public class Bubble: SensorEventListener {
     companion object {
         private val PITCH_POSITION = 1
         private val ROLL_POSITION = 2
+        private val SAMPLE_SIZE = 20
     }
 
     lateinit var accelerometerSensor: Sensor
@@ -39,7 +40,7 @@ public class Bubble: SensorEventListener {
         orientationPublisher = PublishSubject.create()
         coordinatesPublisher = PublishSubject.create()
         coordinatesPublisher!!
-                .buffer(40)
+                .buffer(SAMPLE_SIZE)
                 .map { coordinates: List<Coordinates> -> averageCoordinates(coordinates) }
                 .subscribe { coordinates: Coordinates ->
                     orientationPublisher!!.onNext(BubbleEvent(orientationCalculator.calculate(coordinates)))

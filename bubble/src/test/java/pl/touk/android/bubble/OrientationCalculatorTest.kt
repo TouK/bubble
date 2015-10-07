@@ -1,4 +1,4 @@
-package pl.touk.bubble
+package pl.touk.android.bubble
 
 import org.junit.Test
 import pl.touk.android.bubble.Coordinates

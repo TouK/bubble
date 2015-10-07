@@ -5,6 +5,7 @@ import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
+import pl.touk.android.bubble.state.OrientationStateMachine
 import rx.Observable
 import rx.subjects.PublishSubject
 
@@ -23,7 +24,7 @@ public class Bubble: SensorEventListener {
     var orientationPublisher: PublishSubject<BubbleEvent>? = null
     private var coordinatesPublisher: PublishSubject<Coordinates>? = null
 
-    private val orientationCalculator = OrientationCalculator()
+    private val orientationStateMachine = OrientationStateMachine()
 
     private val magneticSensorValues: FloatArray = FloatArray(3)
     private val accelerometerSensorValues: FloatArray = FloatArray(3)
@@ -43,7 +44,9 @@ public class Bubble: SensorEventListener {
                 .buffer(SAMPLE_SIZE)
                 .map { coordinates: List<Coordinates> -> averageCoordinates(coordinates) }
                 .subscribe { coordinates: Coordinates ->
-                    orientationPublisher!!.onNext(BubbleEvent(orientationCalculator.calculate(coordinates)))
+                    if (orientationStateMachine.update(coordinates)) {
+                        orientationPublisher!!.onNext(BubbleEvent(orientationStateMachine.orientation))
+                    }
                 }
         return orientationPublisher!!
     }

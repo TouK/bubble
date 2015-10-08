@@ -1,4 +1,7 @@
-package pl.touk.android.bubble
+package pl.touk.android.bubble.orientation
+
+import pl.touk.android.bubble.Degree
+import pl.touk.android.bubble.coordinates.Coordinates
 
 open class OrientationCalculator {
 

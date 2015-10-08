@@ -5,15 +5,15 @@ import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
-import pl.touk.android.bubble.state.OrientationStateMachine
+import pl.touk.android.bubble.coordinates.Coordinates
+import pl.touk.android.bubble.coordinates.CoordinatesCalculator
+import pl.touk.android.bubble.state.BubbleStateMachine
 import rx.Observable
 import rx.subjects.PublishSubject
 
 public class Bubble: SensorEventListener {
 
     companion object {
-        private val PITCH_POSITION = 1
-        private val ROLL_POSITION = 2
         private val SAMPLE_SIZE = 20
     }
 
@@ -24,47 +24,37 @@ public class Bubble: SensorEventListener {
     var orientationPublisher: PublishSubject<BubbleEvent>? = null
     private var coordinatesPublisher: PublishSubject<Coordinates>? = null
 
-    private val orientationStateMachine = OrientationStateMachine()
-
-    private val magneticSensorValues: FloatArray = FloatArray(3)
-    private val accelerometerSensorValues: FloatArray = FloatArray(3)
-    private val rotationMatrix: FloatArray = FloatArray(9)
-    private val orientationCoordinates: FloatArray = FloatArray(3)
-
-    var lastOrientation = Orientation.PORTRAIT
+    private val orientationStateMachine = BubbleStateMachine()
+    private val coordinatesCalculator = CoordinatesCalculator()
 
     public fun register(context: Context): Observable<BubbleEvent> {
-        loadSensosrs(context)
 
-        sensorManager.registerListener(this, accelerometerSensor, SensorManager.SENSOR_DELAY_UI)
-        sensorManager.registerListener(this, magneticSensor, SensorManager.SENSOR_DELAY_UI)
         orientationPublisher = PublishSubject.create()
         coordinatesPublisher = PublishSubject.create()
         coordinatesPublisher!!
                 .buffer(SAMPLE_SIZE)
-                .map { coordinates: List<Coordinates> -> averageCoordinates(coordinates) }
+                .map { coordinates: List<Coordinates> -> coordinatesCalculator.averageCoordinates(coordinates) }
                 .subscribe { coordinates: Coordinates ->
                     if (orientationStateMachine.update(coordinates)) {
                         orientationPublisher!!.onNext(BubbleEvent(orientationStateMachine.orientation))
                     }
                 }
+
+        loadSensors(context)
+        sensorManager.registerListener(this, accelerometerSensor, SensorManager.SENSOR_DELAY_UI)
+        sensorManager.registerListener(this, magneticSensor, SensorManager.SENSOR_DELAY_UI)
+
         return orientationPublisher!!
     }
 
-    private fun averageCoordinates(coordinates: List<Coordinates>): Coordinates {
-        var averagePitch = 0f
-        var averageRoll = 0f
-        val size = coordinates.size().toFloat()
-
-        coordinates.forEach {
-            averagePitch += it.pitch
-            averageRoll += it.roll
-        }
-
-        return Coordinates(averagePitch/size, averageRoll/size)
+    override fun onSensorChanged(sensorEvent: SensorEvent) {
+        coordinatesPublisher!!.onNext(coordinatesCalculator.calculate(sensorEvent))
     }
 
-    private fun loadSensosrs(context: Context) {
+    override fun onAccuracyChanged(p0: Sensor?, p1: Int) {
+    }
+
+    private fun loadSensors(context: Context) {
         sensorManager = context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
         accelerometerSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
         magneticSensor = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD)
@@ -77,34 +67,6 @@ public class Bubble: SensorEventListener {
             orientationPublisher!!.onCompleted()
         }
     }
-
-    override fun onAccuracyChanged(p0: Sensor?, p1: Int) {
-    }
-
-    override fun onSensorChanged(sensorEvent: SensorEvent) {
-        cacheEventData(sensorEvent)
-        coordinatesPublisher!!.onNext(calculateOrientationCoordinates())
-    }
-
-    private fun cacheEventData(sensorEvent: SensorEvent) {
-        if (sensorEvent.sensor.type == Sensor.TYPE_ACCELEROMETER) {
-            System.arraycopy(sensorEvent.values, 0, accelerometerSensorValues, 0, 3);
-        } else if (sensorEvent.sensor.type == Sensor.TYPE_MAGNETIC_FIELD) {
-            System.arraycopy(sensorEvent.values, 0, magneticSensorValues, 0, 3);
-        }
-    }
-
-    private fun calculateOrientationCoordinates(): Coordinates {
-        SensorManager.getRotationMatrix(rotationMatrix, null, accelerometerSensorValues, magneticSensorValues);
-        SensorManager.getOrientation(rotationMatrix, orientationCoordinates);
-
-        val pitch = orientationCoordinates[PITCH_POSITION]
-        val roll = orientationCoordinates[ROLL_POSITION]
-
-        return Coordinates(pitch, roll)
-
-    }
-
 }
 
 inline fun<T> ifRegistered(subject: PublishSubject<T>?, action: () -> Unit) {

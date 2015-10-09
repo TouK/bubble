@@ -17,7 +17,5 @@ class BubbleSampleActivity : AppCompatActivity() {
         val textView = findViewById(R.id.label) as TextView
         bubble.register(this)
             .subscribe { bubbleEvent: BubbleEvent -> textView.text = bubbleEvent.orientation.name() }
-
-
     }
 }

@@ -15,7 +15,7 @@ class OrientationCalculatorTest {
     public fun shouldReturnPortraitWhenPhoneInFullPortrait() {
         //given
         val coordinates = Coordinates(pitch = Degree.MINUS_90,
-                roll = Degree.ZERO)
+                                      roll = Degree.ZERO)
 
         //when
         val orientation = orientationCalculator.calculate(coordinates)
@@ -28,7 +28,7 @@ class OrientationCalculatorTest {
     public fun shouldReturnLandscapeWhenPhoneInFullLandscape() {
         //given
         val coordinates = Coordinates(pitch = Degree.ZERO,
-                roll = Degree.MINUS_90)
+                                      roll = Degree.MINUS_90)
 
         //when
         val orientation = orientationCalculator.calculate(coordinates)
@@ -61,7 +61,7 @@ class OrientationCalculatorTest {
     public fun shouldReturnLandscapeWhenPhoneLiesOnTheLeftMoreThan45AndTiltedMoreThan45() {
         //given
         val coordinates = Coordinates(pitch = Degree.MINUS_45 + 1f,
-                roll = Degree.MINUS_45 - 1f)
+                                      roll = Degree.MINUS_45 - 1f)
 
         //when
         val orientation = orientationCalculator.calculate(coordinates)
@@ -75,7 +75,7 @@ class OrientationCalculatorTest {
     public fun shouldReturnPortraitWhenPhoneLiesOnTheLeftMoreThan45AndTiltedLessThan45() {
         //given
         val coordinates = Coordinates(pitch = Degree.MINUS_45 + 1f,
-                roll = Degree.MINUS_45 + 1f)
+                                      roll = Degree.MINUS_45 + 1f)
 
         //when
         val orientation = orientationCalculator.calculate(coordinates)

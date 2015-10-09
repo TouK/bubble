@@ -33,7 +33,7 @@ public class Bubble: SensorEventListener {
         coordinatesPublisher = PublishSubject.create()
         coordinatesPublisher!!
                 .buffer(SAMPLE_SIZE)
-                .map { coordinates: List<Coordinates> -> coordinatesCalculator.averageCoordinates(coordinates) }
+                .map { coordinates: List<Coordinates> -> coordinatesCalculator.calculateAverage(coordinates) }
                 .subscribe { coordinates: Coordinates ->
                     if (orientationStateMachine.update(coordinates)) {
                         orientationPublisher!!.onNext(BubbleEvent(orientationStateMachine.orientation))
@@ -51,7 +51,7 @@ public class Bubble: SensorEventListener {
         coordinatesPublisher!!.onNext(coordinatesCalculator.calculate(sensorEvent))
     }
 
-    override fun onAccuracyChanged(p0: Sensor?, p1: Int) {
+    override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
     }
 
     private fun loadSensors(context: Context) {

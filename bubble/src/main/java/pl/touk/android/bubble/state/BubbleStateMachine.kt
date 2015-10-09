@@ -10,9 +10,9 @@ class BubbleStateMachine {
 
     internal var orientationCalculator = OrientationCalculator()
 
-    var orientation = Orientation.UNDEFINED
+    internal var orientation = Orientation.UNDEFINED
 
-    fun update(coordinates: Coordinates): Boolean {
+    internal fun update(coordinates: Coordinates): Boolean {
         val oldOrientation = orientation
         orientation = when (orientation) {
             Orientation.UNDEFINED   -> orientationCalculator.calculate(coordinates)

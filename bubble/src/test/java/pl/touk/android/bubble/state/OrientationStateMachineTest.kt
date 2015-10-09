@@ -138,7 +138,6 @@ class OrientationStateMachineTest {
     private fun verifyStateChange(initState: Orientation,
                                   newCoordinates: Coordinates,
                                   expectedState: Orientation) {
-
         //given
         orientationStateMachine.orientation = initState
 
@@ -147,7 +146,6 @@ class OrientationStateMachineTest {
 
         //then
         assertThat(orientationStateMachine.orientation).isEqualTo(expectedState)
-
     }
 
 }

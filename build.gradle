@@ -1,7 +1,7 @@
 buildscript {
+    ext.kotlin_version = '0.13.1513'
     repositories {
         jcenter()
-        mavenCentral()
         maven { url "http://oss.sonatype.org/content/repositories/snapshots/" }
     }
     dependencies {
@@ -32,9 +32,6 @@ allprojects {
 
     repositories {
         jcenter()
-    }
-    repositories {
-        mavenCentral()
         maven {
             url 'https://oss.sonatype.org/content/repositories/snapshots/'
         }

@@ -18,20 +18,20 @@ public class Bubble: SensorEventListener {
     companion object {
         private val SAMPLE_SIZE = 20
     }
-
-    lateinit var accelerometerSensor: Sensor
-    lateinit var magneticSensor: Sensor
-    lateinit var sensorManager: SensorManager
+    enum class Registration { UNREGISTERED, LISTENER, OBSERVER }
 
     var orientationPublisher: PublishSubject<BubbleEvent>? = null
-    lateinit private var coordinatesPublisher: PublishSubject<Coordinates>
+    var bubbleListener: BubbleListener? = null
 
+
+    lateinit private var accelerometerSensor: Sensor
+    lateinit private var magneticSensor: Sensor
+    lateinit private var sensorManager: SensorManager
+    lateinit private var coordinatesPublisher: PublishSubject<Coordinates>
     private val orientationStateMachine = BubbleStateMachine()
     private val coordinatesCalculator = CoordinatesCalculator()
 
-    enum class Registration { UNREGISTERED, LISTENER, OBSERVER }
     var registration = Registration.UNREGISTERED
-    var bubbleListener: BubbleListener? = null
 
     public fun register(context: Context): Observable<BubbleEvent> {
         orientationPublisher = PublishSubject.create()

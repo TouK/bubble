@@ -8,11 +8,11 @@ import pl.touk.android.bubble.orientation.OrientationCalculator
 
 class BubbleStateMachine {
 
-    internal var orientationCalculator = OrientationCalculator()
+    var orientationCalculator = OrientationCalculator()
 
-    internal var orientation = Orientation.UNDEFINED
+    var orientation = Orientation.UNDEFINED
 
-    internal fun update(coordinates: Coordinates): Boolean {
+    fun update(coordinates: Coordinates): Boolean {
         val oldOrientation = orientation
         orientation = when (orientation) {
             Orientation.UNDEFINED   -> orientationCalculator.calculate(coordinates)

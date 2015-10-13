@@ -86,6 +86,13 @@ class OrientationStateMachineTest {
     }
 
     @Test
+    public fun portraitShouldChangeToReverseLandscapeWhenPitchInRangeMinus45_45AndRollMoreThan45() {
+        verifyStateChange(initState = Orientation.PORTRAIT,
+                newCoordinates = Coordinates(Degree.MINUS_45 + Degree.ONE, Degree.PLUS_45 + Degree.ONE),
+                expectedState  = Orientation.REVERSE_LANDSCAPE)
+    }
+
+    @Test
     public fun landscapeShouldNotChangeUntilPitchMoreThanMinus45Degree() {
         val moreThanMinus45 = Degree.MINUS_45 + Degree.ONE
 

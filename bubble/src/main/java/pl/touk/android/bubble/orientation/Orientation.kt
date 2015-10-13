@@ -4,5 +4,6 @@ public enum class Orientation {
     PORTRAIT,
     REVERSE_PORTRAIT,
     LANDSCAPE,
+    REVERSE_LANDSCAPE,
     UNDEFINED;
 }

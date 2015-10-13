@@ -129,4 +129,26 @@ class OrientationCalculatorTest {
         assertThat(orientationCalculator.calculate(Coordinates(pitch, roll = Degree.PLUS_45)))
                 .isEqualTo(Orientation.REVERSE_PORTRAIT)
     }
+
+    @Test
+    // -45 < pitch < 45 & roll >= 45 => REVESE_LANDSCAPE
+    public fun shouldReturnReverseLandscapeWhenPhoneRollMoreThan45AndPitchInRangeMinus45And45() {
+        //given
+        val roll = Degree.PLUS_45 + 1f
+
+        //when then
+        assertThat(orientationCalculator.calculate(Coordinates(pitch = Degree.PLUS_45 - Degree.ONE,
+                                                                roll = roll)))
+            .isEqualTo(Orientation.REVERSE_LANDSCAPE)
+
+        //when then
+        assertThat(orientationCalculator.calculate(Coordinates(pitch = Degree.ZERO,
+                                                                roll = roll)))
+                .isEqualTo(Orientation.REVERSE_LANDSCAPE)
+
+        //when then
+        assertThat(orientationCalculator.calculate(Coordinates(pitch = Degree.MINUS_45 + Degree.ONE,
+                                                                roll = roll)))
+                .isEqualTo(Orientation.REVERSE_LANDSCAPE)
+    }
 }

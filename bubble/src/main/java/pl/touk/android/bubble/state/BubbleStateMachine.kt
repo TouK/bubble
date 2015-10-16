@@ -24,11 +24,21 @@ class BubbleStateMachine {
         return oldOrientation != orientation
     }
 
-    private fun stateAfterLandscape(coordinates: Coordinates)
-            = if (shouldStayInLandscape(coordinates)) Orientation.LANDSCAPE else Orientation.PORTRAIT
+    private fun stateAfterLandscape(coordinates: Coordinates): Orientation {
+        if (shouldStayInLandscape(coordinates)) {
+            return Orientation.LANDSCAPE
+        } else if(coordinates.roll > Degree.PLUS_45) {
+            return Orientation.REVERSE_LANDSCAPE
+        } else if (coordinates.pitch > Degree.PLUS_45) {
+            return Orientation.REVERSE_PORTRAIT
+        }else {
+            return Orientation.PORTRAIT
+        }
+    }
 
     private fun shouldStayInLandscape(coordinates: Coordinates)
-            = coordinates.pitch >= Degree.MINUS_45
+            = coordinates.pitch.inRange(Degree.MINUS_45, Degree.PLUS_45) &&
+              coordinates.roll.inRange(Degree.MINUS_45, Degree.PLUS_45)
 
     private fun stateAfterPortrait(coordinates: Coordinates): Orientation {
         if (shouldStayPortrait(coordinates)) {

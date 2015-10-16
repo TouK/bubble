@@ -36,6 +36,8 @@ class BubbleStateMachine {
         } else {
             return if (coordinates.roll < Degree.MINUS_45) {
                 return Orientation.LANDSCAPE
+            } else if (coordinates.pitch > Degree.PLUS_45) {
+                return Orientation.REVERSE_PORTRAIT
             } else {
                 return Orientation.REVERSE_LANDSCAPE
             }
@@ -43,6 +45,8 @@ class BubbleStateMachine {
     }
 
     private fun shouldStayPortrait(coordinates: Coordinates)
-            = coordinates.pitch < Degree.MINUS_45 || coordinates.roll.inRange(Degree.MINUS_45, Degree.PLUS_45)
+            = coordinates.pitch < Degree.MINUS_45 ||
+                (coordinates.roll.inRange(Degree.MINUS_45, Degree.PLUS_45) &&
+                        coordinates.pitch.inRange(Degree.MINUS_45, Degree.PLUS_45))
 
 }

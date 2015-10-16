@@ -19,6 +19,7 @@ class BubbleStateMachine {
             Orientation.UNDEFINED   -> orientationCalculator.calculate(coordinates)
             Orientation.PORTRAIT    -> stateAfterPortrait(coordinates)
             Orientation.LANDSCAPE   -> stateAfterLandscape(coordinates)
+            Orientation.REVERSE_PORTRAIT   -> stateAfterReversePortrait(coordinates)
             else                    -> orientation
         }
         return oldOrientation != orientation
@@ -54,8 +55,27 @@ class BubbleStateMachine {
         }
     }
 
+    private fun stateAfterReversePortrait(coordinates: Coordinates): Orientation {
+        if (shouldStayReversePortrait(coordinates)) {
+            return Orientation.REVERSE_PORTRAIT
+        } else {
+            return if (coordinates.roll < Degree.MINUS_45) {
+                return Orientation.LANDSCAPE
+            } else if (coordinates.pitch < Degree.MINUS_45) {
+                return Orientation.PORTRAIT
+            } else {
+                return Orientation.REVERSE_LANDSCAPE
+            }
+        }
+    }
+
     private fun shouldStayPortrait(coordinates: Coordinates)
             = coordinates.pitch < Degree.MINUS_45 ||
+                (coordinates.roll.inRange(Degree.MINUS_45, Degree.PLUS_45) &&
+                        coordinates.pitch.inRange(Degree.MINUS_45, Degree.PLUS_45))
+
+    private fun shouldStayReversePortrait(coordinates: Coordinates)
+            = coordinates.pitch >= Degree.PLUS_45 ||
                 (coordinates.roll.inRange(Degree.MINUS_45, Degree.PLUS_45) &&
                         coordinates.pitch.inRange(Degree.MINUS_45, Degree.PLUS_45))
 

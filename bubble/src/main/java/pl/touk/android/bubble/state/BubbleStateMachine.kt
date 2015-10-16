@@ -20,6 +20,7 @@ class BubbleStateMachine {
             Orientation.PORTRAIT    -> stateAfterPortrait(coordinates)
             Orientation.LANDSCAPE   -> stateAfterLandscape(coordinates)
             Orientation.REVERSE_PORTRAIT   -> stateAfterReversePortrait(coordinates)
+            Orientation.REVERSE_LANDSCAPE   -> stateAfterReverseLandscape(coordinates)
             else                    -> orientation
         }
         return oldOrientation != orientation
@@ -28,18 +29,34 @@ class BubbleStateMachine {
     private fun stateAfterLandscape(coordinates: Coordinates): Orientation {
         if (shouldStayInLandscape(coordinates)) {
             return Orientation.LANDSCAPE
-        } else if(coordinates.roll > Degree.PLUS_45) {
-            return Orientation.REVERSE_LANDSCAPE
+        } else if(coordinates.pitch < Degree.MINUS_45) {
+            return Orientation.PORTRAIT
         } else if (coordinates.pitch > Degree.PLUS_45) {
             return Orientation.REVERSE_PORTRAIT
         }else {
+            return Orientation.REVERSE_LANDSCAPE
+        }
+    }
+
+    private fun stateAfterReverseLandscape(coordinates: Coordinates): Orientation {
+        if (shouldStayInReverseLandscape(coordinates)) {
+            return Orientation.REVERSE_LANDSCAPE
+        } else if(coordinates.pitch < Degree.MINUS_45) {
             return Orientation.PORTRAIT
+        } else if (coordinates.pitch > Degree.PLUS_45) {
+            return Orientation.REVERSE_PORTRAIT
+        }else {
+            return Orientation.LANDSCAPE
         }
     }
 
     private fun shouldStayInLandscape(coordinates: Coordinates)
             = coordinates.pitch.inRange(Degree.MINUS_45, Degree.PLUS_45) &&
-              coordinates.roll.inRange(Degree.MINUS_45, Degree.PLUS_45)
+              coordinates.roll < Degree.PLUS_45
+
+    private fun shouldStayInReverseLandscape(coordinates: Coordinates)
+            = coordinates.pitch.inRange(Degree.MINUS_45, Degree.PLUS_45) &&
+              coordinates.roll > Degree.MINUS_45
 
     private fun stateAfterPortrait(coordinates: Coordinates): Orientation {
         if (shouldStayPortrait(coordinates)) {

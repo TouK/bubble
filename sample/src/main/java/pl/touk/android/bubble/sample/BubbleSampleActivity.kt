@@ -2,6 +2,7 @@ package pl.touk.android.bubble.sample
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import android.view.animation.Animation
 import android.view.animation.AnimationSet
 import android.view.animation.DecelerateInterpolator
@@ -29,6 +30,7 @@ class BubbleSampleActivity : AppCompatActivity() {
     }
 
     private fun rotateTo(orientation: Orientation) {
+        Log.e("Sample", "Rotate to: $orientation")
         val animSet = AnimationSet(true)
         animSet.interpolator = DecelerateInterpolator()
         animSet.fillAfter = true
@@ -49,6 +51,8 @@ class BubbleSampleActivity : AppCompatActivity() {
         return when(orientation) {
             Orientation.PORTRAIT -> 0f
             Orientation.LANDSCAPE -> 90f
+            Orientation.REVERSE_LANDSCAPE -> 270f
+            Orientation.REVERSE_PORTRAIT -> 180f
             else -> endAngle
         }
     }

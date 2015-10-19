@@ -27,9 +27,9 @@ class BubbleStateMachine {
             return orientation
         }
 
-        if(coordinates.pitch < Degree.MINUS_45) {
+        if(coordinates.pitch < Orientation.PORTRAIT.treshold) {
             return Orientation.PORTRAIT
-        } else if (coordinates.pitch > Degree.PLUS_45) {
+        } else if (coordinates.pitch > Orientation.REVERSE_PORTRAIT.treshold) {
             return Orientation.REVERSE_PORTRAIT
         }else {
             return orientation.opposite
@@ -41,9 +41,9 @@ class BubbleStateMachine {
             return orientation
         }
 
-        if (coordinates.roll < Degree.MINUS_45) {
+        if (coordinates.roll < Orientation.LANDSCAPE.treshold) {
             return Orientation.LANDSCAPE
-        } else if (coordinates.roll > Degree.PLUS_45) {
+        } else if (coordinates.roll > Orientation.REVERSE_LANDSCAPE.treshold) {
             return Orientation.REVERSE_LANDSCAPE
         } else {
             return orientation.opposite
@@ -62,24 +62,26 @@ class BubbleStateMachine {
 
     private fun shouldStayInLandscape(coordinates: Coordinates)
             = pitchIsNeutral(coordinates) &&
-                coordinates.roll < Degree.PLUS_45
+                coordinates.roll < Orientation.REVERSE_LANDSCAPE.treshold
 
     private fun shouldStayInReverseLandscape(coordinates: Coordinates)
             = pitchIsNeutral(coordinates) &&
-                coordinates.roll > Degree.MINUS_45
+                coordinates.roll > Orientation.LANDSCAPE.treshold
 
     private fun shouldStayPortrait(coordinates: Coordinates)
-            = coordinates.pitch < Degree.MINUS_45 ||
+            = coordinates.pitch < Orientation.PORTRAIT.treshold ||
                 (rollIsNeutral(coordinates) && pitchIsNeutral(coordinates))
 
     private fun shouldStayReversePortrait(coordinates: Coordinates)
-            = coordinates.pitch >= Degree.PLUS_45 ||
+            = coordinates.pitch >= Orientation.REVERSE_PORTRAIT.treshold ||
                 (rollIsNeutral(coordinates) && pitchIsNeutral(coordinates))
 
     private fun rollIsNeutral(coordinates: Coordinates)
-            = coordinates.roll.inRange(Degree.MINUS_45, Degree.PLUS_45)
+            = coordinates.roll.inRange(Orientation.LANDSCAPE.treshold,
+                                        Orientation.REVERSE_LANDSCAPE.treshold)
 
     private fun pitchIsNeutral(coordinates: Coordinates)
-            = coordinates.pitch.inRange(Degree.MINUS_45, Degree.PLUS_45)
+            = coordinates.pitch.inRange(Orientation.PORTRAIT.treshold,
+                                        Orientation.REVERSE_PORTRAIT.treshold)
 
 }

@@ -18,8 +18,8 @@ class BubbleStateMachine {
         orientation = when (orientation) {
             Orientation.UNDEFINED   -> orientationCalculator.calculate(coordinates)
             Orientation.PORTRAIT    -> stateAfterPortrait(coordinates)
+            Orientation.REVERSE_PORTRAIT   -> stateAfterPortrait(coordinates)
             Orientation.LANDSCAPE   -> stateAfterLandscape(coordinates)
-            Orientation.REVERSE_PORTRAIT   -> stateAfterReversePortrait(coordinates)
             Orientation.REVERSE_LANDSCAPE   -> stateAfterReverseLandscape(coordinates)
             else                    -> orientation
         }
@@ -59,37 +59,33 @@ class BubbleStateMachine {
               coordinates.roll > Degree.MINUS_45
 
     private fun stateAfterPortrait(coordinates: Coordinates): Orientation {
-        if (shouldStayPortrait(coordinates)) {
-            return Orientation.PORTRAIT
+        if (!shouldChange(coordinates)) {
+            return orientation
+        }
+
+        if (coordinates.roll < Degree.MINUS_45) {
+            return Orientation.LANDSCAPE
+        } else if (coordinates.roll > Degree.PLUS_45) {
+            return Orientation.REVERSE_LANDSCAPE
         } else {
-            return if (coordinates.roll < Degree.MINUS_45) {
-                return Orientation.LANDSCAPE
-            } else if (coordinates.pitch > Degree.PLUS_45) {
-                return Orientation.REVERSE_PORTRAIT
-            } else {
-                return Orientation.REVERSE_LANDSCAPE
-            }
+            return orientation.opposite
         }
     }
 
-    private fun stateAfterReversePortrait(coordinates: Coordinates): Orientation {
-        if (shouldStayReversePortrait(coordinates)) {
-            return Orientation.REVERSE_PORTRAIT
-        } else {
-            return if (coordinates.roll < Degree.MINUS_45) {
-                return Orientation.LANDSCAPE
-            } else if (coordinates.pitch < Degree.MINUS_45) {
-                return Orientation.PORTRAIT
-            } else {
-                return Orientation.REVERSE_LANDSCAPE
-            }
+    private fun shouldChange(coordinates: Coordinates): Boolean {
+        return when (orientation) {
+            Orientation.PORTRAIT    -> !shouldStayPortrait(coordinates)
+            Orientation.LANDSCAPE   -> !shouldStayInLandscape(coordinates)
+            Orientation.REVERSE_PORTRAIT   -> !shouldStayReversePortrait(coordinates)
+            Orientation.REVERSE_LANDSCAPE   -> !shouldStayInReverseLandscape(coordinates)
+            else                    -> false
         }
     }
 
     private fun shouldStayPortrait(coordinates: Coordinates)
             = coordinates.pitch < Degree.MINUS_45 ||
-                (coordinates.roll.inRange(Degree.MINUS_45, Degree.PLUS_45) &&
-                        coordinates.pitch.inRange(Degree.MINUS_45, Degree.PLUS_45))
+            (coordinates.roll.inRange(Degree.MINUS_45, Degree.PLUS_45) &&
+                    coordinates.pitch.inRange(Degree.MINUS_45, Degree.PLUS_45))
 
     private fun shouldStayReversePortrait(coordinates: Coordinates)
             = coordinates.pitch >= Degree.PLUS_45 ||

@@ -62,23 +62,24 @@ class BubbleStateMachine {
 
     private fun shouldStayInLandscape(coordinates: Coordinates)
             = pitchIsNeutral(coordinates) &&
-            coordinates.roll < Degree.PLUS_45
+                coordinates.roll < Degree.PLUS_45
 
     private fun shouldStayInReverseLandscape(coordinates: Coordinates)
             = pitchIsNeutral(coordinates) &&
-            coordinates.roll > Degree.MINUS_45
+                coordinates.roll > Degree.MINUS_45
 
     private fun shouldStayPortrait(coordinates: Coordinates)
             = coordinates.pitch < Degree.MINUS_45 ||
-            (rollIsNeutral(coordinates) && pitchIsNeutral(coordinates))
+                (rollIsNeutral(coordinates) && pitchIsNeutral(coordinates))
 
     private fun shouldStayReversePortrait(coordinates: Coordinates)
             = coordinates.pitch >= Degree.PLUS_45 ||
-                (rollIsNeutral(coordinates) &&
-                        pitchIsNeutral(coordinates))
+                (rollIsNeutral(coordinates) && pitchIsNeutral(coordinates))
 
-    private fun rollIsNeutral(coordinates: Coordinates) = coordinates.roll.inRange(Degree.MINUS_45, Degree.PLUS_45)
+    private fun rollIsNeutral(coordinates: Coordinates)
+            = coordinates.roll.inRange(Degree.MINUS_45, Degree.PLUS_45)
 
-    private fun pitchIsNeutral(coordinates: Coordinates) = coordinates.pitch.inRange(Degree.MINUS_45, Degree.PLUS_45)
+    private fun pitchIsNeutral(coordinates: Coordinates)
+            = coordinates.pitch.inRange(Degree.MINUS_45, Degree.PLUS_45)
 
 }

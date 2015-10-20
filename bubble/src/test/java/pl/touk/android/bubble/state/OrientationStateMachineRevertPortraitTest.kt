@@ -10,8 +10,7 @@ import pl.touk.android.bubble.testvalue.Degree
 class OrientationStateMachineReversePortraitTest: OrientationStateTestBase() {
 
     @Test
-    // P >=45 => Rev Portrait
-    public fun portraitShouldNotChangeUntilPithMoreThan() {
+    public fun `P >=45 => Rev Portrait`() {
         val moreThan45 = Degree.PLUS_45 + Degree.ONE
 
         verifyStateChange(initState      = Orientation.REVERSE_PORTRAIT,
@@ -32,8 +31,7 @@ class OrientationStateMachineReversePortraitTest: OrientationStateTestBase() {
     }
 
     @Test
-    // [45 >= P >= -45] && [45 >= R >= -45] => Rev Portrait
-    public fun portraitShouldNotChangeUntilRollMoreThanMinus45Degree() {
+    public fun `[45 >= P >= -45] && [45 >= R >= -45] => Rev Portrait`() {
         val moreThanMinus45 = Degree.MINUS_45 + Degree.ONE
 
         verifyStateChange(initState = Orientation.REVERSE_PORTRAIT,
@@ -54,8 +52,7 @@ class OrientationStateMachineReversePortraitTest: OrientationStateTestBase() {
     }
 
     @Test
-    // [45 >= P >= -45] && [-45 > R ] => Landscape
-    public fun portraitShouldChangeToReverseLandscapeWhenPitchInRangeMinus45_45AndRollBelowMinus45() {
+    public fun `[45 >= P >= -45] && [-45 > R ] => Landscape`() {
         verifyStateChange(initState = Orientation.REVERSE_PORTRAIT,
                 newCoordinates = Coordinates(Degree.MINUS_45 + Degree.ONE, Degree.MINUS_45 - Degree.ONE),
                 expectedState  = Orientation.LANDSCAPE);
@@ -66,8 +63,7 @@ class OrientationStateMachineReversePortraitTest: OrientationStateTestBase() {
     }
 
     @Test
-    // [45 >= P >= -45] && [ R > 45 ] => Rev Landscape
-    public fun portraitShouldChangeToReverseLandscapeWhenPitchInRangeMinus45_45AndRollMoreThan45() {
+    public fun `[45 >= P >= -45] && [ R > 45 ] => Rev Landscape`() {
         verifyStateChange(initState = Orientation.REVERSE_PORTRAIT,
                 newCoordinates = Coordinates(Degree.MINUS_45 + Degree.ONE, Degree.PLUS_45 + Degree.ONE),
                 expectedState  = Orientation.REVERSE_LANDSCAPE)
@@ -78,8 +74,7 @@ class OrientationStateMachineReversePortraitTest: OrientationStateTestBase() {
     }
 
     @Test
-    // [ -45 > P] && [ 45 > R > -45 ] => Rev Portrait
-    public fun portraitShouldChangeToReverseLandscapeWhenPitchMoreThan45AndRollInRangeMinus45_45() {
+    public fun `[ -45 > P] && [ 45 > R > -45 ] => Rev Portrait`() {
         val belowMinus45 = Degree.MINUS_45 - Degree.ONE
 
         verifyStateChange(initState = Orientation.REVERSE_PORTRAIT,

@@ -9,7 +9,7 @@ public enum class Orientation(val treshold: Float = 0f) {
     REVERSE_LANDSCAPE(Degree.PLUS_45),
     UNDEFINED();
 
-    val opposite: Orientation
+    val opposite: Orientation   
         get() = when (this) {
             PORTRAIT            -> REVERSE_PORTRAIT
             REVERSE_PORTRAIT    -> PORTRAIT

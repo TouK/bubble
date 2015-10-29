@@ -57,7 +57,7 @@ class OrientationCalculatorTest {
     }
 
     @Test
-    //pitch > -45 & roll <= -45
+    //pitch gt -45 & roll <= -45
     public fun shouldReturnLandscapeWhenPhoneLiesOnTheLeftMoreThan45AndTiltedMoreThan45() {
         //given
         val coordinates = Coordinates(pitch = Degree.MINUS_45 + 1f,
@@ -71,7 +71,7 @@ class OrientationCalculatorTest {
     }
 
     @Test
-    //pitch > -45 & roll > -45 => Portrait
+    //pitch gt -45 & roll gt -45 gives Portrait
     public fun shouldReturnPortraitWhenPhoneLiesOnTheLeftMoreThan45AndTiltedLessThan45() {
         //given
         val coordinates = Coordinates(pitch = Degree.MINUS_45 + 1f,
@@ -108,7 +108,7 @@ class OrientationCalculatorTest {
     }
 
     @Test
-    // pitch > 45 & roll == whatever => REVESE_PORTRAIT
+    // pitch gt 45 & roll == whatever gives REVESE_PORTRAIT
     public fun shouldReturnReversePortraitWhenPhonePitchLessThan45FromReverseVertical() {
         //given
         val pitch = Degree.PLUS_45 + 1f
@@ -131,7 +131,7 @@ class OrientationCalculatorTest {
     }
 
     @Test
-    // -45 < pitch < 45 & roll >= 45 => REVESE_LANDSCAPE
+    // -45 < pitch < 45 & roll ge 45 gives REVESE_LANDSCAPE
     public fun shouldReturnReverseLandscapeWhenPhoneRollMoreThan45AndPitchInRangeMinus45And45() {
         //given
         val roll = Degree.PLUS_45 + 1f

@@ -6,7 +6,7 @@ Bubble is an Android library for obtaining screen orientation. By default, Andro
 
 Thanks to Bubble you could achieve such result as below. Some widgets are rotated without recreating the whole activity:
 
-       obrazki buuble i kamery
+       ![alt Sample](https://raw.github.com/username/projectname/branch/path/to/img.png)
 
 ### Kotlin
 The Library, sample and unit tests are written fully in [Kotlin] and Bubble still is fully compatibile with typical Java-Andorid projects.

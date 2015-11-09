@@ -1,4 +1,5 @@
-# Bubble
+<img width="50%" height="50%" src ="./img/bubble4_nomargin.png" />
+# Bubble 
 
 [![Build Status](https://travis-ci.org/TouK/bubble.svg?branch=master)](https://travis-ci.org/TouK/bubble)
 
@@ -86,3 +87,4 @@ Bubble uses an accelerometer to obtain [Pitch and Roll] of a telephone. An accel
 
    [Kotlin]: <http://kotlinlang.com>
    [Pitch and Roll]: <https://commons.wikimedia.org/wiki/File:Pitch_Roll_and_Yaw.svg>
+   [logo]: <./img/bubble.png>

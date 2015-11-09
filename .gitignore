@@ -1,4 +1,7 @@
 release/
+keystore/
+
+
 
 # Built application files
 *.apk

@@ -48,8 +48,19 @@ android {
         versionCode 1
         versionName "0.0.1"
     }
+
+    signingConfigs {
+        release {
+            storeFile file("../keystore/softisland.keystore")
+            storePassword System.getenv("bubbleKeyStorePassword")
+            keyAlias System.getenv("bubbleKeyAlias")
+            keyPassword System.getenv("bubbleKeyPassword")
+        }
+    }
+
     buildTypes {
         release {
+            signingConfig signingConfigs.release
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }

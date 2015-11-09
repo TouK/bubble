@@ -4,7 +4,7 @@
 
 Bubble is an Android library for obtaining screen orientation. By default, Android supports screen orientation changes by providing a callback that is invoked on a screen orientation change. Unfortunately this mechanism has a huge drawback. When system handles screen orientation change it recreates the view from scratch, so you could not create smooth transitions. Moreover if you lock the activity's orientation in AndroidManifest, the callback is not invoked any more. Thus if you would like to have a custom view transition on a screen orientation change, you have to detect it by yourself what is pretty complicated.
 
-Thanks to Bubble you could achieve result as in a camera applicatio. Some widgets are rotated without recreating the whole activity:
+Thanks to Bubble you could achieve result as in a camera application. Some widgets are rotated without recreating the whole activity:
 
 <p align="center">
 <img src ="https://raw.githubusercontent.com/TouK/bubble/master/readme_assets/sample.gif" />

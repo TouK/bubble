@@ -2,16 +2,16 @@
 
 [![Build Status](https://travis-ci.org/TouK/bubble.svg?branch=master)](https://travis-ci.org/TouK/bubble)
 
-Bubble is an Android library for obtaining screen orientation. By default, Android supports screen orientation changes by providing a callback that is invoked on a screen orientation change. Unfortunately this mechanism has a huge drawback. When system handles screen orientation change it recreates the view from scratch, so you could not create smooth transitions. Moreover if you lock the activity's orientation in AndroidManifest, the callback is not invoked any more. Thus if you would like to have a custom view transition on a screen orientation change, you have to detect it by yourself what is pretty complicated.
+Bubble is an Android library for obtaining screen orientation. By default, Android supports screen orientation changes by providing a callback. Unfortunately this mechanism has a huge drawback. When system handles the screen orientation change it recreates the view from scratch, making it impossible to create smooth transitions. Moreover if you lock the activity's orientation in AndroidManifest, the callback is not invoked any more. Thus if you would like to have a custom view transition on a screen orientation change, you have to detect it by yourself what is pretty complicated.
 
-Thanks to Bubble you could achieve result as in a camera applicatio. Some widgets are rotated without recreating the whole activity:
+Thanks to Bubble you could achieve result as in a camera application. Widgets can be rotated without recreating the whole activity:
 
 <p align="center">
 <img src ="https://raw.githubusercontent.com/TouK/bubble/master/readme_assets/sample.gif" />
 </p>
 
 ### Kotlin
-The Library, sample and unit tests are written fully in [Kotlin] and Bubble still is fully compatibile with typical Java-Andorid projects.
+The Library, sample and unit tests are written fully in [Kotlin](https://kotlinlang.org) and Bubble still is fully compatible with typical Java-Andorid projects.
 
 ### Import
 
@@ -27,10 +27,10 @@ Bubble provides information about screen orientation each time new orientation i
 * LANDSCAPE
 * REVERSE_LANDSCAPE
 
-To get information from Bubble you have to register for events, and if you do not want to receive events any more, should unregister to avoid memory leaks. Bubble provide[s] two APIs that can be used.
+To get information from Bubble you have to register for events, and if you do not want to receive events any more, should unregister to avoid memory leaks. Bubble provides two APIs that can be used.
 
 ##### RxJava
-Please notice sample is written in [Kotlin].
+Please notice sample is written in [Kotlin](https://kotlinlang.org).
 ```kotlin
 class BubbleSampleActivity : AppCompatActivity() {
     val bubble: Bubble = Bubble()
@@ -47,7 +47,7 @@ class BubbleSampleActivity : AppCompatActivity() {
 ```
 
 #### Callback
-Please notice sample is written in [Kotlin].
+Please notice sample is written in [Kotlin](https://kotlinlang.org).
 ```kotlin
 class BubbleSampleActivity : AppCompatActivity() {
     val bubble: Bubble = Bubble()

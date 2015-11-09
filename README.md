@@ -1,5 +1,4 @@
 <img width="50%" height="50%" src ="./img/bubble4_nomargin.png" />
-# Bubble 
 
 [![Build Status](https://travis-ci.org/TouK/bubble.svg?branch=master)](https://travis-ci.org/TouK/bubble)
 

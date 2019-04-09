@@ -27,12 +27,13 @@ buildscript {
 
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
-apply plugin: 'com.neenbedankt.android-apt'
+apply plugin: 'kotlin-kapt'
 apply plugin: 'maven'
+apply plugin: 'kotlin-android-extensions'
+
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion "23.0.0"
+    compileSdkVersion 27
 
     lintOptions {
         abortOnError false
@@ -44,7 +45,7 @@ android {
 
     defaultConfig {
         minSdkVersion 16
-        targetSdkVersion 23
+        targetSdkVersion 26
         versionCode 1
         versionName "0.0.1"
     }
@@ -54,6 +55,9 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+        debug {
+
+        }
     }
 
     compileOptions {
@@ -62,7 +66,6 @@ android {
     }
 
     sourceSets {
-        instrumentTest.setRoot('src/test')
         main.java.srcDirs += 'src/main/kotlin'
     }
 
@@ -74,19 +77,19 @@ android {
 }
 
 dependencies {
-    compile 'com.netflix.rxjava:rxjava-android:0.20.7'
-    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    provided 'javax.annotation:jsr250-api:1.0'
+    implementation 'com.netflix.rxjava:rxjava-android:0.20.7'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    compileOnly 'javax.annotation:jsr250-api:1.0'
 
-    testCompile('junit:junit:4.11') {
+    testImplementation('junit:junit:4.11') {
         exclude module: 'hamcrest-core'
     }
-    testCompile 'org.hamcrest:hamcrest-integration:1.1'
-    testCompile 'org.hamcrest:hamcrest-core:1.1'
-    testCompile 'org.hamcrest:hamcrest-library:1.1'
-    testCompile 'org.assertj:assertj-core:1.7.0'
-    testCompile 'org.mockito:mockito-all:1.10.19'
-    testCompile('org.robolectric:robolectric:2.4') {
+    testImplementation 'org.hamcrest:hamcrest-integration:1.1'
+    testImplementation 'org.hamcrest:hamcrest-core:1.1'
+    testImplementation 'org.hamcrest:hamcrest-library:1.1'
+    testImplementation 'org.assertj:assertj-core:1.7.0'
+    testImplementation 'org.mockito:mockito-all:1.10.19'
+    testImplementation('org.robolectric:robolectric:2.4') {
         exclude module: 'classworlds'
         exclude module: 'commons-logging'
         exclude module: 'httpclient'

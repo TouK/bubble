@@ -18,6 +18,8 @@
 buildscript {
     repositories {
         jcenter()
+        google()
+        mavenCentral()
     }
 
     dependencies {
@@ -27,11 +29,11 @@ buildscript {
 
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-apply plugin: 'com.neenbedankt.android-apt'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion "23.0.0"
+    compileSdkVersion 27
 
     lintOptions {
         abortOnError false
@@ -44,7 +46,7 @@ android {
     defaultConfig {
         applicationId "pl.touk.android.bubble.sample"
         minSdkVersion 16
-        targetSdkVersion 23
+        targetSdkVersion 26
         versionCode 1
         versionName "0.0.1"
     }
@@ -54,6 +56,9 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+        debug {
+
+        }
     }
 
     compileOptions {
@@ -62,7 +67,6 @@ android {
     }
 
     sourceSets {
-        instrumentTest.setRoot('src/test')
         main.java.srcDirs += 'src/main/kotlin'
     }
 
@@ -74,13 +78,13 @@ android {
 }
 
 dependencies {
-    compile project(":bubble")
-    compile 'com.netflix.rxjava:rxjava-android:0.20.7'
-    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    compile 'com.jakewharton:kotterknife:0.1.0-SNAPSHOT'
+    implementation project(':bubble')
+    implementation 'com.netflix.rxjava:rxjava-android:0.20.7'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    implementation 'com.jakewharton:kotterknife:0.1.0-SNAPSHOT'
 
-    compile 'com.android.support:appcompat-v7:23.0.0'
-    compile 'com.android.support:support-v4:23.0.0'
+    implementation 'com.android.support:appcompat-v7:27.0.2'
+    implementation 'com.android.support:support-v4:27.0.2'
 }
 
 apply plugin: 'idea'

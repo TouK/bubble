@@ -59,7 +59,7 @@ class CoordinatesCalculator {
     internal fun calculateAverage(coordinates: List<Coordinates>): Coordinates {
         var averagePitch = 0f
         var averageRoll = 0f
-        val size = coordinates.size().toFloat()
+        val size = coordinates.size.toFloat()
 
         coordinates.forEach {
             averagePitch += it.pitch

@@ -27,8 +27,8 @@ import pl.touk.android.bubble.coordinates.CoordinatesCalculator
 import pl.touk.android.bubble.listener.BubbleListener
 import pl.touk.android.bubble.orientation.Orientation
 import pl.touk.android.bubble.state.BubbleStateMachine
-import rx.Observable
-import rx.subjects.PublishSubject
+import io.reactivex.Observable
+import io.reactivex.subjects.PublishSubject
 
 public class Bubble: SensorEventListener {
 
@@ -105,9 +105,9 @@ public class Bubble: SensorEventListener {
     public fun unregister() {
         sensorManager.unregisterListener(this)
         ifRegistered() {
-            coordinatesPublisher.onCompleted()
+            coordinatesPublisher.onComplete()
             if (registration == Registration.OBSERVER) {
-                orientationPublisher!!.onCompleted()
+                orientationPublisher!!.onComplete()
             } else {
                 bubbleListener = null
             }

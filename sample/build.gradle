@@ -79,7 +79,8 @@ android {
 
 dependencies {
     implementation project(':bubble')
-    implementation 'com.netflix.rxjava:rxjava-android:0.20.7'
+    implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
+    implementation 'io.reactivex.rxjava2:rxjava:2.2.8'
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation 'com.jakewharton:kotterknife:0.1.0-SNAPSHOT'
 

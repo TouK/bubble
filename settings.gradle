@@ -15,6 +15,6 @@
  *
  */
 
-rootProject.name = 'bubble-root'
+rootProject.name = 'bubble'
 
 include ':bubble', ':sample'

@@ -30,6 +30,10 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-android-extensions'
 
+apply plugin: 'com.github.dcendents.android-maven'
+
+group='com.github.TouK'
+
 
 android {
     compileSdkVersion 27
@@ -109,4 +113,6 @@ dependencies {
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
 }
+
+
 

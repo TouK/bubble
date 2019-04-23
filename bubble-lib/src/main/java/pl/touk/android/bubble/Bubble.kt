@@ -30,10 +30,10 @@ import pl.touk.android.bubble.state.BubbleStateMachine
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 
-public class Bubble: SensorEventListener {
+public class Bubble(val sampleSize: Int = DEFAULT_SAMPLE_SIZE): SensorEventListener {
 
     companion object {
-        private val SAMPLE_SIZE = 20
+        private const val DEFAULT_SAMPLE_SIZE = 20
     }
     enum class Registration { UNREGISTERED, LISTENER, OBSERVER }
 
@@ -49,6 +49,7 @@ public class Bubble: SensorEventListener {
     private val coordinatesCalculator = CoordinatesCalculator()
 
     var registration = Registration.UNREGISTERED
+
 
     public fun register(context: Context): Observable<BubbleEvent> {
         orientationPublisher = PublishSubject.create()
@@ -68,7 +69,7 @@ public class Bubble: SensorEventListener {
     private fun setupAndRegisterSensorsListeners(context: Context) {
         coordinatesPublisher = PublishSubject.create()
         coordinatesPublisher
-                .buffer(SAMPLE_SIZE)
+                .buffer(sampleSize)
                 .map { coordinates: List<Coordinates> -> coordinatesCalculator.calculateAverage(coordinates) }
                 .subscribe { coordinates: Coordinates ->
                     orientationStateMachine.update(coordinates)

@@ -20,66 +20,57 @@ package pl.touk.android.bubble.coordinates
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorManager
-
+typealias Radian = Float
+typealias RadianArray = FloatArray
+typealias Degrees = Float
 
 class CoordinatesCalculator {
 
     companion object {
-        private val PITCH_POSITION = 1
-        private val ROLL_POSITION = 2
-        private val SENSOR_RESULTS_SIZE = 3
-        private val ORIENTATION_COORDINATES_RESULT_SIZE = 3
-        private val ROTATION_MATRIX_SIZE = 9
+        private const val AZIMUTH_POSITION = 0
+        private const val PITCH_POSITION = 1
+        private const val ROLL_POSITION = 2
+        private const val SENSOR_RESULTS_SIZE = 3
+        private const val ORIENTATION_COORDINATES_RESULT_SIZE = 3
+        private const val ROTATION_MATRIX_SIZE = 9
     }
 
-    private val rotationMatrix: FloatArray = FloatArray(ROTATION_MATRIX_SIZE)
-    private val orientationCoordinates: FloatArray = FloatArray(ORIENTATION_COORDINATES_RESULT_SIZE)
-
-
-    var gravityRotationalData: FloatArray? = null
-    var magneticRotationalData: FloatArray? = null
-    var accelerometerSensorIndication: FloatArray? = FloatArray(SENSOR_RESULTS_SIZE)
-    var magneticSensorIndication: FloatArray? = FloatArray(SENSOR_RESULTS_SIZE)
-    var values: FloatArray? = FloatArray(3)
-
-    var azimuth: Float = 0F
-    var pitch: Float = 0F
-    var roll: Float = 0F
+    private var accelerometerSensorIndication: FloatArray? = FloatArray(SENSOR_RESULTS_SIZE)
+    private var magneticSensorIndication: FloatArray? = FloatArray(SENSOR_RESULTS_SIZE)
 
     fun calculate(sensorEvent: SensorEvent): Coordinates {
         cacheEventData(sensorEvent)
 
         if (magneticSensorIndication != null && accelerometerSensorIndication != null) {
-            gravityRotationalData = FloatArray(9)
-            magneticRotationalData = FloatArray(9)
-            SensorManager.getRotationMatrix(gravityRotationalData, magneticRotationalData, accelerometerSensorIndication, magneticSensorIndication)
-            // Correct if screen is in Landscape
-
-            val outR = FloatArray(9)
-            SensorManager.remapCoordinateSystem(gravityRotationalData, SensorManager.AXIS_X, SensorManager.AXIS_Z, outR)
-            SensorManager.getOrientation(outR, values)
-
-            azimuth = values!![0] * 57.2957795f //looks like we don't need this one
-            pitch = values!![1] * 57.2957795f
-            roll = values!![2] * 57.2957795f
-            magneticSensorIndication = null //retrigger the loop when things are repopulated
-            accelerometerSensorIndication = null ////retrigger the loop when things are repopulated
+            var deviceOrientation = calculateDeviceOrientation()
+            return deviceOrientation.run { Coordinates(pitch, roll, azimuth) }
         }
-        return Coordinates(pitch, roll, azimuth)
+        return Coordinates.default()
     }
 
-//    fun calculate(sensorEvent: SensorEvent): Coordinates {
-//        cacheEventData(sensorEvent)
-//        SensorManager.getRotationMatrix(rotationMatrix, null, accelerometerSensorValues, magneticSensorValues);
-//        SensorManager.getOrientation(rotationMatrix, orientationCoordinates);
-//
-//        val pitch = Math.toDegrees(orientationCoordinates[PITCH_POSITION].toDouble()).toFloat()
-//        val roll = Math.toDegrees(orientationCoordinates[ROLL_POSITION].toDouble()).toFloat()
-//        val z = Math.toDegrees(orientationCoordinates[0].toDouble()).toFloat()
-//
-//        return Coordinates(pitch, roll, z)
-//    }
-//
+    private fun calculateDeviceOrientation(): RadianArray {
+        var gravityRotationalData = FloatArray(ROTATION_MATRIX_SIZE)
+        var magneticRotationalData = FloatArray(ROTATION_MATRIX_SIZE)
+        SensorManager.getRotationMatrix(gravityRotationalData, magneticRotationalData, accelerometerSensorIndication, magneticSensorIndication)
+        val remappedRotationMatrix = RadianArray(ROTATION_MATRIX_SIZE)
+        SensorManager.remapCoordinateSystem(gravityRotationalData, SensorManager.AXIS_X, SensorManager.AXIS_Z, remappedRotationMatrix)
+        val orientation = RadianArray(ORIENTATION_COORDINATES_RESULT_SIZE)
+        SensorManager.getOrientation(remappedRotationMatrix, orientation)
+        return orientation
+    }
+
+    private val RadianArray.azimuth: Degrees
+        get() = this[AZIMUTH_POSITION].toDegrees()
+
+    private val RadianArray.pitch: Degrees
+        get() = this[PITCH_POSITION].toDegrees()
+
+    private val RadianArray.roll: Degrees
+        get() = this[ROLL_POSITION].toDegrees()
+
+    private fun Radian.toDegrees() = java.lang.Math.toDegrees(this.toDouble()).toFloat()
+
+
     private fun cacheEventData(sensorEvent: SensorEvent) {
         when (sensorEvent.sensor.type) {
             Sensor.TYPE_MAGNETIC_FIELD -> magneticSensorIndication = sensorEvent.values.clone()

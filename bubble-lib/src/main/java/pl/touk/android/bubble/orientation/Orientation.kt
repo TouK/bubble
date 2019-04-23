@@ -17,28 +17,22 @@
 
 package pl.touk.android.bubble.orientation
 
-import pl.touk.android.bubble.Degree
+import android.util.Log
 
-public enum class Orientation(val treshold: Float = 0f) {
-    PORTRAIT(Degree.MINUS_45),
-    REVERSE_PORTRAIT(Degree.PLUS_45),
-    LANDSCAPE(Degree.MINUS_45),
-    REVERSE_LANDSCAPE(Degree.PLUS_45),
-    UNDEFINED();
+enum class Orientation(vararg val ranges: ClosedFloatingPointRange<Float>) {
+    PORTRAIT(-45F..45F),
+    REVERSE_PORTRAIT(-180F..-135F, 135F..180F),
+    LANDSCAPE(-135F..-45F),
+    REVERSE_LANDSCAPE(45F..135F),
+    UNDEFINED(0F..0F);
 
-    val opposite: Orientation   
-        get() = when (this) {
-            PORTRAIT            -> REVERSE_PORTRAIT
-            REVERSE_PORTRAIT    -> PORTRAIT
-            LANDSCAPE           -> REVERSE_LANDSCAPE
-            REVERSE_LANDSCAPE   -> LANDSCAPE
-            else                -> UNDEFINED
+    companion object {
+        fun fetchForRoll(rollDegrees: Float): Orientation {
+            Log.d("Orientation", "obtain orientation for roll $rollDegrees")
+            return Orientation.values().firstOrNull {
+                it.ranges.any { range -> range.contains(rollDegrees) }
+            } ?: UNDEFINED
         }
-
-    val isVertical: Boolean
-        get() = this == PORTRAIT || this == REVERSE_PORTRAIT
-
-    val isHorizontal: Boolean
-        get() = this == LANDSCAPE || this == REVERSE_LANDSCAPE
+    }
 
 }

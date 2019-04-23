@@ -17,4 +17,8 @@
 
 package pl.touk.android.bubble.coordinates
 
-data class Coordinates(val pitch: Float, val roll: Float, val z: Float)
+data class Coordinates(val pitch: Float, val roll: Float, val z: Float) {
+    companion object {
+        fun default() = Coordinates(0f, 0F, 0F)
+    }
+}

@@ -34,7 +34,7 @@ class BubbleSampleActivity : AppCompatActivity() {
 
     val ANIMATION_DURATION: Long = 500
 
-    val bubble: Bubble = Bubble()
+    val bubble: Bubble = Bubble(100)
     lateinit var textView: TextView
     var startAngle = 0f
     var endAngle = 0f

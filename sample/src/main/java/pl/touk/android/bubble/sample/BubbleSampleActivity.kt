@@ -27,6 +27,7 @@ import android.view.animation.RotateAnimation
 import android.widget.TextView
 import pl.touk.android.bubble.Bubble
 import pl.touk.android.bubble.BubbleEvent
+import pl.touk.android.bubble.coordinates.Coordinates
 import pl.touk.android.bubble.orientation.Orientation
 
 class BubbleSampleActivity : AppCompatActivity() {
@@ -43,24 +44,29 @@ class BubbleSampleActivity : AppCompatActivity() {
         setContentView(R.layout.activity_bubble_sample)
         textView = findViewById(R.id.label) as TextView
         bubble.register(this)
-            .subscribe { bubbleEvent: BubbleEvent -> rotateTo(bubbleEvent.orientation) }
+            .subscribe { bubbleEvent: BubbleEvent -> rotateTo(bubbleEvent.orientation, bubbleEvent.coordinates) }
     }
 
-    private fun rotateTo(orientation: Orientation) {
+    private fun rotateTo(orientation: Orientation, coordinates: Coordinates) {
         Log.e("Sample", "Rotate to: $orientation")
         val animSet = AnimationSet(true)
         animSet.interpolator = DecelerateInterpolator()
         animSet.fillAfter = true
         animSet.isFillEnabled = true
 
-        val animRotate = RotateAnimation(startAngle, extractEndAngle(orientation),
+        val endAngle = extractEndAngle(coordinates.roll)
+
+        val animRotate = RotateAnimation(startAngle, endAngle,
                                             Animation.RELATIVE_TO_SELF, 0.5f,
                                             Animation.RELATIVE_TO_SELF, 0.5f)
 
         animRotate.duration = ANIMATION_DURATION
         animRotate.fillAfter = true
         animSet.addAnimation(animRotate)
-        startAngle = extractEndAngle(orientation)
+        startAngle = endAngle
+//        textView.text = "${orientation.name}\n${coordinates.roll*180/3.1415}\n${coordinates.pitch*180/3.1415}"
+        textView.text = "${orientation.name}\nr: ${coordinates.roll}\np: ${coordinates.pitch}\n" +
+                "z: ${coordinates.z}"
         textView.startAnimation(animSet)
     }
 
@@ -72,5 +78,9 @@ class BubbleSampleActivity : AppCompatActivity() {
             Orientation.REVERSE_PORTRAIT -> 180f
             else -> endAngle
         }
+    }
+
+    private fun extractEndAngle(roll: Float): Float {
+        return -roll
     }
 }

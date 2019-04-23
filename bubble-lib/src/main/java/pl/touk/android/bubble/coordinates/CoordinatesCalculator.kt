@@ -32,40 +32,73 @@ class CoordinatesCalculator {
         private val ROTATION_MATRIX_SIZE = 9
     }
 
-    private val magneticSensorValues: FloatArray = FloatArray(SENSOR_RESULTS_SIZE)
-    private val accelerometerSensorValues: FloatArray = FloatArray(SENSOR_RESULTS_SIZE)
     private val rotationMatrix: FloatArray = FloatArray(ROTATION_MATRIX_SIZE)
     private val orientationCoordinates: FloatArray = FloatArray(ORIENTATION_COORDINATES_RESULT_SIZE)
 
-    public fun calculate(sensorEvent: SensorEvent): Coordinates {
+
+    var gravityRotationalData: FloatArray? = null
+    var magneticRotationalData: FloatArray? = null
+    var accelerometerSensorIndication: FloatArray? = FloatArray(SENSOR_RESULTS_SIZE)
+    var magneticSensorIndication: FloatArray? = FloatArray(SENSOR_RESULTS_SIZE)
+    var values: FloatArray? = FloatArray(3)
+
+    var azimuth: Float = 0F
+    var pitch: Float = 0F
+    var roll: Float = 0F
+
+    fun calculate(sensorEvent: SensorEvent): Coordinates {
         cacheEventData(sensorEvent)
-        SensorManager.getRotationMatrix(rotationMatrix, null, accelerometerSensorValues, magneticSensorValues);
-        SensorManager.getOrientation(rotationMatrix, orientationCoordinates);
 
-        val pitch = orientationCoordinates[PITCH_POSITION]
-        val roll = orientationCoordinates[ROLL_POSITION]
+        if (magneticSensorIndication != null && accelerometerSensorIndication != null) {
+            gravityRotationalData = FloatArray(9)
+            magneticRotationalData = FloatArray(9)
+            SensorManager.getRotationMatrix(gravityRotationalData, magneticRotationalData, accelerometerSensorIndication, magneticSensorIndication)
+            // Correct if screen is in Landscape
 
-        return Coordinates(pitch, roll)
+            val outR = FloatArray(9)
+            SensorManager.remapCoordinateSystem(gravityRotationalData, SensorManager.AXIS_X, SensorManager.AXIS_Z, outR)
+            SensorManager.getOrientation(outR, values)
+
+            azimuth = values!![0] * 57.2957795f //looks like we don't need this one
+            pitch = values!![1] * 57.2957795f
+            roll = values!![2] * 57.2957795f
+            magneticSensorIndication = null //retrigger the loop when things are repopulated
+            accelerometerSensorIndication = null ////retrigger the loop when things are repopulated
+        }
+        return Coordinates(pitch, roll, azimuth)
     }
 
+//    fun calculate(sensorEvent: SensorEvent): Coordinates {
+//        cacheEventData(sensorEvent)
+//        SensorManager.getRotationMatrix(rotationMatrix, null, accelerometerSensorValues, magneticSensorValues);
+//        SensorManager.getOrientation(rotationMatrix, orientationCoordinates);
+//
+//        val pitch = Math.toDegrees(orientationCoordinates[PITCH_POSITION].toDouble()).toFloat()
+//        val roll = Math.toDegrees(orientationCoordinates[ROLL_POSITION].toDouble()).toFloat()
+//        val z = Math.toDegrees(orientationCoordinates[0].toDouble()).toFloat()
+//
+//        return Coordinates(pitch, roll, z)
+//    }
+//
     private fun cacheEventData(sensorEvent: SensorEvent) {
-        if (sensorEvent.sensor.type == Sensor.TYPE_ACCELEROMETER) {
-            System.arraycopy(sensorEvent.values, 0, accelerometerSensorValues, 0, SENSOR_RESULTS_SIZE);
-        } else if (sensorEvent.sensor.type == Sensor.TYPE_MAGNETIC_FIELD) {
-            System.arraycopy(sensorEvent.values, 0, magneticSensorValues, 0, SENSOR_RESULTS_SIZE);
+        when (sensorEvent.sensor.type) {
+            Sensor.TYPE_MAGNETIC_FIELD -> magneticSensorIndication = sensorEvent.values.clone()
+            Sensor.TYPE_ACCELEROMETER -> accelerometerSensorIndication = sensorEvent.values.clone()
         }
     }
 
     internal fun calculateAverage(coordinates: List<Coordinates>): Coordinates {
         var averagePitch = 0f
         var averageRoll = 0f
+        var averageZ = 0f
         val size = coordinates.size.toFloat()
 
         coordinates.forEach {
             averagePitch += it.pitch
             averageRoll += it.roll
+            averageZ += it.z
         }
 
-        return Coordinates(averagePitch / size, averageRoll / size)
+        return Coordinates(averagePitch / size, averageRoll / size, averageZ / size )
     }
 }

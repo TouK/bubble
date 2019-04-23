@@ -71,9 +71,8 @@ public class Bubble: SensorEventListener {
                 .buffer(SAMPLE_SIZE)
                 .map { coordinates: List<Coordinates> -> coordinatesCalculator.calculateAverage(coordinates) }
                 .subscribe { coordinates: Coordinates ->
-                    if (orientationStateMachine.update(coordinates)) {
-                        informClient(orientationStateMachine.orientation)
-                    }
+                    orientationStateMachine.update(coordinates)
+                    informClient(orientationStateMachine.orientation, coordinates)
                 }
 
         loadSensors(context)
@@ -81,11 +80,11 @@ public class Bubble: SensorEventListener {
         sensorManager.registerListener(this, magneticSensor, SensorManager.SENSOR_DELAY_UI)
     }
 
-    private fun informClient(orientation: Orientation) {
+    private fun informClient(orientation: Orientation, coordinates: Coordinates) {
         if (registration == Registration.OBSERVER) {
-            orientationPublisher!!.onNext(BubbleEvent(orientation))
+            orientationPublisher!!.onNext(BubbleEvent(orientation, coordinates))
         } else {
-            bubbleListener!!.onOrientationChanged(BubbleEvent(orientation))
+            bubbleListener!!.onOrientationChanged(BubbleEvent(orientation, coordinates))
         }
     }
 

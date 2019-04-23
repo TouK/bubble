@@ -17,6 +17,7 @@
 
 package pl.touk.android.bubble
 
+import pl.touk.android.bubble.coordinates.Coordinates
 import pl.touk.android.bubble.orientation.Orientation
 
-public class BubbleEvent(val orientation: Orientation)
+class BubbleEvent(val orientation: Orientation, val coordinates: Coordinates)

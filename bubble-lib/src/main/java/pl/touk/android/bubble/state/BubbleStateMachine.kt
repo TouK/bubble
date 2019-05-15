@@ -17,14 +17,34 @@
 
 package pl.touk.android.bubble.state
 
+import android.util.Log
+import pl.touk.android.bubble.bookkeeper.BookKeeper
 import pl.touk.android.bubble.coordinates.Coordinates
 import pl.touk.android.bubble.orientation.Orientation
 
 class BubbleStateMachine {
 
     var orientation = Orientation.UNDEFINED
+//
+//    private val data = Array(1000) { 0L }
+//    private val rollData = Array(1000) { 0.0F }
+//    private val pitchData = Array(1000) { 0.0F }
+//    private var eventsCount = 0
+//    private var last = System.currentTimeMillis()
+//    private val bookKeeper = BookKeeper()
 
     fun update(coordinates: Coordinates): Boolean {
+//        if (eventsCount == 1000) {
+//            Log.i("BubbleData", "time ${bookKeeper.calculate(data)}")
+//            Log.i("BubbleData", "\troll ${bookKeeper.calculateF(rollData)}")
+//            Log.i("BubbleData", "\tpitch ${bookKeeper.calculateF(pitchData)}")
+//            eventsCount = 0
+//        }
+//        data[eventsCount] = System.currentTimeMillis() - last
+//        rollData[eventsCount] = coordinates.roll
+//        pitchData[eventsCount] = coordinates.pitch
+//        last = System.currentTimeMillis()
+//        ++eventsCount
         val oldOrientation = orientation
         orientation = Orientation.fetchForRoll(coordinates.roll)
         return oldOrientation != orientation

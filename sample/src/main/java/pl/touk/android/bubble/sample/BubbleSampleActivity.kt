@@ -17,6 +17,7 @@
 
 package pl.touk.android.bubble.sample
 
+import android.hardware.SensorManager
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
@@ -27,6 +28,8 @@ import android.view.animation.RotateAnimation
 import android.widget.TextView
 import pl.touk.android.bubble.Bubble
 import pl.touk.android.bubble.BubbleEvent
+import pl.touk.android.bubble.BubbleSettings
+import pl.touk.android.bubble.bookkeeper.BookKeeper
 import pl.touk.android.bubble.coordinates.Coordinates
 import pl.touk.android.bubble.orientation.Orientation
 
@@ -34,7 +37,7 @@ class BubbleSampleActivity : AppCompatActivity() {
 
     val ANIMATION_DURATION: Long = 500
 
-    val bubble: Bubble = Bubble(100)
+    val bubble: Bubble = Bubble(2, BubbleSettings(SensorManager.SENSOR_DELAY_FASTEST))
     lateinit var textView: TextView
     var startAngle = 0f
     var endAngle = 0f
@@ -47,7 +50,27 @@ class BubbleSampleActivity : AppCompatActivity() {
             .subscribe { bubbleEvent: BubbleEvent -> rotateTo(bubbleEvent.orientation, bubbleEvent.coordinates) }
     }
 
+    private val data = Array(1000) { 0L }
+    private val rollData = Array(1000) { 0.0F }
+    private val pitchData = Array(1000) { 0.0F }
+    private var eventsCount = 0
+    private var last = System.currentTimeMillis()
+    private val bookKeeper = BookKeeper()
+
     private fun rotateTo(orientation: Orientation, coordinates: Coordinates) {
+
+        if (eventsCount == 1000) {
+            Log.i("BubbleAppData", "time ${bookKeeper.calculate(data)}")
+            Log.i("BubbleAppData", "\troll ${bookKeeper.calculateF(rollData)}")
+            Log.i("BubbleAppData", "\tpitch ${bookKeeper.calculateF(pitchData)}")
+            eventsCount = 0
+        }
+        data[eventsCount] = System.currentTimeMillis() - last
+        rollData[eventsCount] = coordinates.roll
+        pitchData[eventsCount] = coordinates.pitch
+        last = System.currentTimeMillis()
+        ++eventsCount
+
         Log.e("Sample", "Rotate to: $orientation")
         val animSet = AnimationSet(true)
         animSet.interpolator = DecelerateInterpolator()
@@ -65,8 +88,8 @@ class BubbleSampleActivity : AppCompatActivity() {
         animSet.addAnimation(animRotate)
         startAngle = endAngle
 //        textView.text = "${orientation.name}\n${coordinates.roll*180/3.1415}\n${coordinates.pitch*180/3.1415}"
-        textView.text = "${orientation.name}\nr: ${coordinates.roll}\np: ${coordinates.pitch}\n" +
-                "z: ${coordinates.z}"
+        textView.text = "${orientation.name}\nroll: ${coordinates.roll}\npitch: ${coordinates.pitch}\n" +
+                "azimuth: ${coordinates.z}"
         textView.startAnimation(animSet)
     }
 

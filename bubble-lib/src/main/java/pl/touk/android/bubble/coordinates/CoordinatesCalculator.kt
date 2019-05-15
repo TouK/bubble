@@ -20,6 +20,8 @@ package pl.touk.android.bubble.coordinates
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorManager
+import android.util.Log
+
 typealias Radian = Float
 typealias RadianArray = FloatArray
 typealias Degrees = Float
@@ -39,13 +41,18 @@ class CoordinatesCalculator {
     private var magneticSensorIndication: FloatArray? = FloatArray(SENSOR_RESULTS_SIZE)
 
     fun calculate(sensorEvent: SensorEvent): Coordinates {
+        val start = System.currentTimeMillis()
         cacheEventData(sensorEvent)
 
         if (magneticSensorIndication != null && accelerometerSensorIndication != null) {
             var deviceOrientation = calculateDeviceOrientation()
-            return deviceOrientation.run { Coordinates(pitch, roll, azimuth) }
+            return deviceOrientation.run { Coordinates(pitch, roll, azimuth) }.also {
+                Log.d("AvgCalc", "time [${System.currentTimeMillis() - start}]")
+            }
         }
-        return Coordinates.default()
+        return Coordinates.default().also {
+            Log.d("AvgCalc", "time [${System.currentTimeMillis() - start}]")
+        }
     }
 
     private fun calculateDeviceOrientation(): RadianArray {

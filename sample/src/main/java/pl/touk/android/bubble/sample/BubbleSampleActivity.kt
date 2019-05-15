@@ -37,7 +37,7 @@ class BubbleSampleActivity : AppCompatActivity() {
 
     val ANIMATION_DURATION: Long = 500
 
-    val bubble: Bubble = Bubble(2, BubbleSettings(SensorManager.SENSOR_DELAY_FASTEST))
+    val bubble: Bubble = Bubble(1, BubbleSettings(SensorManager.SENSOR_DELAY_FASTEST))
     lateinit var textView: TextView
     var startAngle = 0f
     var endAngle = 0f

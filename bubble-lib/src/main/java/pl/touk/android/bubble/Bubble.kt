@@ -30,7 +30,6 @@ import pl.touk.android.bubble.orientation.Orientation
 import pl.touk.android.bubble.state.BubbleStateMachine
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
-import pl.touk.android.bubble.bookkeeper.BookKeeper
 
 public class Bubble(val sampleSize: Int = DEFAULT_SAMPLE_SIZE,
                     val bubbleSettings: BubbleSettings = BubbleSettings()): SensorEventListener {
@@ -80,8 +79,8 @@ public class Bubble(val sampleSize: Int = DEFAULT_SAMPLE_SIZE,
                 }
 
         loadSensors(context)
-        sensorManager.registerListener(AccelerometerSensorListener(), accelerometerSensor, bubbleSettings.samplingPeriodUs)
-        sensorManager.registerListener(MagneticSensorListener(), magneticSensor, bubbleSettings.samplingPeriodUs)
+        sensorManager.registerListener(this, accelerometerSensor, bubbleSettings.samplingPeriodUs)
+        sensorManager.registerListener(this, magneticSensor, bubbleSettings.samplingPeriodUs)
     }
 
     private fun informClient(orientation: Orientation, coordinates: Coordinates) {
@@ -126,46 +125,22 @@ public class Bubble(val sampleSize: Int = DEFAULT_SAMPLE_SIZE,
     }
 
     inner class AccelerometerSensorListener : SensorEventListener {
-        private val data = Array(1000) { 0L }
-        private var eventsCount = 0
-        private var last = System.currentTimeMillis()
-        private val bookKeeper = BookKeeper()
 
         override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
             Log.i("Accelerometer", "accurancy: $accuracy")
         }
         override fun onSensorChanged(sensorEvent: SensorEvent) {
-            if (eventsCount == 1000) {
-                data[0] = data[999]
-                Log.i("AccelerometerData", "${bookKeeper.calculate(data)}")
-                eventsCount = 0
-            }
-            data[eventsCount] = System.currentTimeMillis() - last
-            last = System.currentTimeMillis()
             coordinatesPublisher.onNext(coordinatesCalculator.calculate(sensorEvent))
-            ++eventsCount
         }
     }
 
     inner class MagneticSensorListener : SensorEventListener {
-        private val data = Array(1000) { 0L }
-        private var eventsCount = 0
-        private var last = System.currentTimeMillis()
-        private val bookKeeper = BookKeeper()
 
         override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
             Log.i("Magnetic", "accurancy: $accuracy")
         }
         override fun onSensorChanged(sensorEvent: SensorEvent) {
-            if (eventsCount == 1000) {
-                data[0] = data[999]
-                Log.i("MagneticData", "${bookKeeper.calculate(data)}")
-                eventsCount = 0
-            }
-            data[eventsCount] = System.currentTimeMillis() - last
-            last = System.currentTimeMillis()
             coordinatesPublisher.onNext(coordinatesCalculator.calculate(sensorEvent))
-            ++eventsCount
         }
     }
 

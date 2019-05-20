@@ -46,13 +46,9 @@ class CoordinatesCalculator {
 
         if (magneticSensorIndication != null && accelerometerSensorIndication != null) {
             var deviceOrientation = calculateDeviceOrientation()
-            return deviceOrientation.run { Coordinates(pitch, roll, azimuth) }.also {
-                Log.d("AvgCalc", "time [${System.currentTimeMillis() - start}]")
-            }
+            return deviceOrientation.run { Coordinates(pitch, roll, azimuth) }
         }
-        return Coordinates.default().also {
-            Log.d("AvgCalc", "time [${System.currentTimeMillis() - start}]")
-        }
+        return Coordinates.default()
     }
 
     private fun calculateDeviceOrientation(): RadianArray {

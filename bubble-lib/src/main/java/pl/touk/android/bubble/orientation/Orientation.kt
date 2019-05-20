@@ -28,7 +28,6 @@ enum class Orientation(vararg val ranges: ClosedFloatingPointRange<Float>) {
 
     companion object {
         fun fetchForRoll(rollDegrees: Float): Orientation {
-            Log.d("Orientation", "obtain orientation for roll $rollDegrees")
             return Orientation.values().firstOrNull {
                 it.ranges.any { range -> range.contains(rollDegrees) }
             } ?: UNDEFINED
